@@ -1,3 +1,20 @@
+server:
+  port: 8081
+
 spring:
   application:
     name: ms-pedidos360-catalog
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/pedidos360_catalog}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${ENTRA_ISSUER_URI:https://login.microsoftonline.com/0bfad962-b91d-465a-b769-8e71565efe7d/v2.0}
+          audiences: ${ENTRA_API_CLIENT_ID:d80d5009-1b8a-49b2-a3da-08a8bbd00936}
