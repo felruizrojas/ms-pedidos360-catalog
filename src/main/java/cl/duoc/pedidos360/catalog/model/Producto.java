@@ -29,6 +29,4 @@ public class Producto {
     private BigDecimal precio;
 
     private Integer stock;
-
-    private String categoria;
 }

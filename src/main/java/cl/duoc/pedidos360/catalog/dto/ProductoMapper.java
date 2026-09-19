@@ -13,7 +13,6 @@ public final class ProductoMapper {
                 .descripcion(request.getDescripcion())
                 .precio(request.getPrecio())
                 .stock(request.getStock())
-                .categoria(request.getCategoria())
                 .build();
     }
 
@@ -24,7 +23,6 @@ public final class ProductoMapper {
                 .descripcion(producto.getDescripcion())
                 .precio(producto.getPrecio())
                 .stock(producto.getStock())
-                .categoria(producto.getCategoria())
                 .build();
     }
 }

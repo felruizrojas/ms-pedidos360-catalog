@@ -31,6 +31,4 @@ public class ProductoRequest {
     @NotNull
     @PositiveOrZero
     private Integer stock;
-
-    private String categoria;
 }

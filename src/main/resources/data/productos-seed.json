@@ -1,15 +1,15 @@
 [
-  { "nombre": "Pan Amasado", "descripcion": "Pan amasado tradicional chileno, unidad", "precio": 600, "stock": 80, "categoria": "Panadería" },
-  { "nombre": "Marraqueta", "descripcion": "Pan marraqueta crujiente, unidad", "precio": 500, "stock": 100, "categoria": "Panadería" },
-  { "nombre": "Hallulla", "descripcion": "Pan hallulla clásico, unidad", "precio": 550, "stock": 90, "categoria": "Panadería" },
-  { "nombre": "Café Americano", "descripcion": "Café negro filtrado 350ml", "precio": 1500, "stock": 60, "categoria": "Cafetería" },
-  { "nombre": "Café con Leche", "descripcion": "Café con leche vaporizada 350ml", "precio": 1800, "stock": 60, "categoria": "Cafetería" },
-  { "nombre": "Capuchino", "descripcion": "Espresso con espuma de leche 350ml", "precio": 2200, "stock": 50, "categoria": "Cafetería" },
-  { "nombre": "Torta de Chocolate (porción)", "descripcion": "Porción de torta de chocolate", "precio": 2500, "stock": 30, "categoria": "Pastelería" },
-  { "nombre": "Kuchen de Manzana (porción)", "descripcion": "Porción de kuchen de manzana", "precio": 2300, "stock": 25, "categoria": "Pastelería" },
-  { "nombre": "Empanada de Pino", "descripcion": "Empanada horneada de pino", "precio": 1900, "stock": 40, "categoria": "Panadería" },
-  { "nombre": "Sándwich Barros Luco", "descripcion": "Sándwich de carne y queso derretido", "precio": 3500, "stock": 20, "categoria": "Sándwiches" },
-  { "nombre": "Sándwich de Jamón y Queso", "descripcion": "Sándwich clásico de jamón y queso", "precio": 2800, "stock": 25, "categoria": "Sándwiches" },
-  { "nombre": "Jugo Natural de Naranja", "descripcion": "Jugo natural exprimido 350ml", "precio": 1700, "stock": 35, "categoria": "Bebidas" },
-  { "nombre": "Agua Mineral", "descripcion": "Agua mineral sin gas 500ml", "precio": 900, "stock": 70, "categoria": "Bebidas" }
+  { "nombre": "Pan Amasado", "descripcion": "Pan amasado tradicional chileno, unidad", "precio": 600, "stock": 80 },
+  { "nombre": "Marraqueta", "descripcion": "Pan marraqueta crujiente, unidad", "precio": 500, "stock": 100 },
+  { "nombre": "Hallulla", "descripcion": "Pan hallulla clásico, unidad", "precio": 550, "stock": 90 },
+  { "nombre": "Café Americano", "descripcion": "Café negro filtrado 350ml", "precio": 1500, "stock": 60 },
+  { "nombre": "Café con Leche", "descripcion": "Café con leche vaporizada 350ml", "precio": 1800, "stock": 60 },
+  { "nombre": "Capuchino", "descripcion": "Espresso con espuma de leche 350ml", "precio": 2200, "stock": 50 },
+  { "nombre": "Torta de Chocolate (porción)", "descripcion": "Porción de torta de chocolate", "precio": 2500, "stock": 30 },
+  { "nombre": "Kuchen de Manzana (porción)", "descripcion": "Porción de kuchen de manzana", "precio": 2300, "stock": 25 },
+  { "nombre": "Empanada de Pino", "descripcion": "Empanada horneada de pino", "precio": 1900, "stock": 40 },
+  { "nombre": "Sándwich Barros Luco", "descripcion": "Sándwich de carne y queso derretido", "precio": 3500, "stock": 20 },
+  { "nombre": "Sándwich de Jamón y Queso", "descripcion": "Sándwich clásico de jamón y queso", "precio": 2800, "stock": 25 },
+  { "nombre": "Jugo Natural de Naranja", "descripcion": "Jugo natural exprimido 350ml", "precio": 1700, "stock": 35 },
+  { "nombre": "Agua Mineral", "descripcion": "Agua mineral sin gas 500ml", "precio": 900, "stock": 70 }
 ]
