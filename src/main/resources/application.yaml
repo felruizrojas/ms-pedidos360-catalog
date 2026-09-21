@@ -18,3 +18,15 @@ spring:
         jwt:
           issuer-uri: ${ENTRA_ISSUER_URI:https://login.microsoftonline.com/0bfad962-b91d-465a-b769-8e71565efe7d/v2.0}
           audiences: ${ENTRA_API_CLIENT_ID:d80d5009-1b8a-49b2-a3da-08a8bbd00936}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+pedidos360:
+  security:
+    enforce-roles: ${ENFORCE_ROLES:false}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:}
