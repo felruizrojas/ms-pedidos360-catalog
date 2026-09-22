@@ -7,12 +7,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import cl.duoc.pedidos360.catalog.model.Producto;
 import cl.duoc.pedidos360.catalog.repository.ProductoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 @Slf4j
 @Component
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DataSeeder implements CommandLineRunner {
 
     private final ProductoRepository productoRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     @Override
     public void run(String... args) throws Exception {
@@ -34,7 +34,7 @@ public class DataSeeder implements CommandLineRunner {
                 log.warn("No se encontró el archivo de seed productos-seed.json");
                 return;
             }
-            List<Producto> productos = objectMapper.readValue(inputStream, new com.fasterxml.jackson.core.type.TypeReference<List<Producto>>() {
+            List<Producto> productos = objectMapper.readValue(inputStream, new TypeReference<List<Producto>>() {
             });
             productoRepository.saveAll(productos);
             log.info("Seed de catálogo cargado: {} productos insertados", productos.size());
