@@ -23,9 +23,12 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 255)
+    // unique = true agrega la restricción a nivel de BD: última barrera contra duplicados
+    // aunque dos requests concurrentes pasen el chequeo de ProductoService al mismo tiempo.
+    @Column(nullable = false, length = 25, unique = true)
     private String nombre;
 
+    @Column(length = 50)
     private String descripcion;
 
     @Column(nullable = false, precision = 12, scale = 2)

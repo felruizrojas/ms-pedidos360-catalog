@@ -47,6 +47,15 @@ public class GlobalExceptionHandler {
                 .body(ErrorBody.of(HttpStatus.NOT_FOUND, ex.getMessage()));
     }
 
+    @ExceptionHandler(ProductoDuplicadoException.class)
+    public ResponseEntity<Map<String, Object>> handleDuplicado(ProductoDuplicadoException ex) {
+        // 400 (no 409) y con "detalles.nombre" a propósito: es el mismo shape que ya usa
+        // handleValidation, así el formulario del front marca el campo con un solo camino de código.
+        Map<String, Object> body = ErrorBody.of(HttpStatus.BAD_REQUEST, "Error de validación");
+        body.put("detalles", Map.of("nombre", "Ya existe un producto con este nombre en el catálogo."));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex) {
         log.error("Error no controlado", ex);
