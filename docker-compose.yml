@@ -1,0 +1,15 @@
+# Catálogo. En la EC2 se usa este archivo tal cual (imagen de GHCR) y PostgreSQL vive en otra EC2;
+# en local se suma docker-compose.override.yml, que compila la imagen y agrega un PostgreSQL local.
+# Variables: copiar .env.example a .env (en la EC2 el .env lo crea CloudFormation).
+services:
+  catalog:
+    image: ${CATALOG_IMAGE:-ghcr.io/felruizrojas/ms-pedidos360-catalog:latest}
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      DB_URL: ${DB_URL:?falta DB_URL en .env}
+      DB_USERNAME: ${DB_USERNAME:?falta DB_USERNAME en .env}
+      DB_PASSWORD: ${DB_PASSWORD:?falta DB_PASSWORD en .env}
+      ENFORCE_ROLES: ${ENFORCE_ROLES:-false}
+    mem_limit: 768m
