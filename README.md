@@ -7,11 +7,10 @@ Solo lo consume el BFF, que le reenvía el JWT del usuario; este servicio **vuel
 | Requisito | Implementación |
 |---|---|
 | Microservicio Spring Boot que compila y pasa pruebas | `./mvnw clean verify` (tests con H2) |
-| Integración con BD cloud | Entidad `Producto`, `ProductoRepository` (JPA), `DB_URL/DB_USERNAME/DB_PASSWORD`. En AWS: PostgreSQL en Docker en la EC2 |
+| Integración con BD | Entidad `Producto`, `ProductoRepository` (JPA), `DB_URL/DB_USERNAME/DB_PASSWORD` |
 | Filtro que valida el JWT del IDaaS | OAuth2 Resource Server: firma (JWKS de Entra ID), `exp/nbf`, `issuer`, `audience` |
 | Autorización | `/api/catalog/**` exige scope `access_as_user`; con `ENFORCE_ROLES=true`, POST exige rol `Admin`/`Operador` |
 | `.gitignore` | Excluye `target/`, IDE y `.DS_Store` |
-| Despliegue | GitHub Actions: `verify` → SCP del jar → `systemctl restart pedidos360-catalog` en EC2 |
 
 ## Endpoints
 | Método | Ruta | Acceso |
@@ -41,11 +40,10 @@ docker run -d --name pg-catalog -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e PO
 ```
 
 ## Swagger (OpenAPI)
-| | Local | AWS |
-|---|---|---|
-| URL | http://localhost:8081/swagger-ui.html | puerto 8081 cerrado a Internet; usar túnel SSH ↓ |
-| Comando | `open http://localhost:8081/swagger-ui.html` | `ssh -i <llave>.pem -N -L 8081:localhost:8081 ec2-user@52.71.122.5` y luego `open http://localhost:8081/swagger-ui.html` |
-| Spec JSON | `curl http://localhost:8081/v3/api-docs` | ídem, con el túnel abierto |
+| | |
+|---|---|
+| URL | http://localhost:8081/swagger-ui.html |
+| Spec JSON | `curl http://localhost:8081/v3/api-docs` |
 
 Documenta el contrato propio del microservicio (el BFF expone el mismo contrato hacia el front).
 
@@ -73,7 +71,3 @@ curl -i -X POST $BASE/api/catalog/products \
   -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
   -d '{"nombre":"","precio":-1,"stock":-5}'                                         # 400 con "detalles"
 ```
-
-**AWS:** el puerto 8081 **no está expuesto a Internet** (solo lo alcanza el BFF dentro de la EC2), por lo que no hay curl público distinto.
-Los **mismos comandos** sirven ejecutándolos por SSH dentro de la instancia (`BASE=http://localhost:8081`).
-Desde fuera, el catálogo se prueba a través del API Gateway (ver README del BFF).

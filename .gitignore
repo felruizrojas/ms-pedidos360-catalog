@@ -32,5 +32,14 @@ build/
 ### VS Code ###
 .vscode/
 
-### macOS ###
+### Project ###
 .DS_Store
+.github/modernize/
+*.log
+logs/
+
+### Secretos ###
+.env
+.env.*
+*.pem
+*.key
