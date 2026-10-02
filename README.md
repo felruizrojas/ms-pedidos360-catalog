@@ -1,3 +1,4 @@
+
 # ms-pedidos360-catalog
 
 Microservicio de catálogo de **Pedidos360** (DSY1107). Spring Boot 4.1.1 · Java 25 · PostgreSQL · puerto **8081**.
