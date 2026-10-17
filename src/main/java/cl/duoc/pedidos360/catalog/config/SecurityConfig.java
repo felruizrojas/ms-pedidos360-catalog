@@ -54,10 +54,12 @@ public class SecurityConfig {
                             "/actuator/health"
                     ).permitAll();
                     if (enforceRoles) {
-                        auth.requestMatchers(HttpMethod.POST, "/api/catalog/**").access(
-                                AuthorizationManagers.allOf(
-                                        AuthorityAuthorizationManager.hasAuthority(SCOPE),
-                                        AuthorityAuthorizationManager.hasAnyAuthority("ROLE_Admin", "ROLE_Operador")));
+                        for (HttpMethod method : List.of(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE)) {
+                            auth.requestMatchers(method, "/api/catalog/**").access(
+                                    AuthorizationManagers.allOf(
+                                            AuthorityAuthorizationManager.hasAuthority(SCOPE),
+                                            AuthorityAuthorizationManager.hasAnyAuthority("ROLE_Admin", "ROLE_Operador")));
+                        }
                     }
                     auth.requestMatchers("/api/catalog/**").hasAuthority(SCOPE)
                             .anyRequest().authenticated();
@@ -95,7 +97,7 @@ public class SecurityConfig {
         if (!origins.isEmpty()) {
             CorsConfiguration configuration = new CorsConfiguration();
             configuration.setAllowedOrigins(origins);
-            configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
+            configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "OPTIONS"));
             configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
             source.registerCorsConfiguration("/**", configuration);
         }

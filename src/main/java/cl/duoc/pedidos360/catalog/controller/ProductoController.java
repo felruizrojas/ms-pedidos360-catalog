@@ -6,11 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.duoc.pedidos360.catalog.dto.ActualizarProductoRequest;
 import cl.duoc.pedidos360.catalog.dto.ProductoRequest;
 import cl.duoc.pedidos360.catalog.dto.ProductoResponse;
 import cl.duoc.pedidos360.catalog.service.ProductoService;
@@ -38,5 +40,10 @@ public class ProductoController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProductoResponse crear(@Valid @RequestBody ProductoRequest request) {
         return productoService.crear(request);
+    }
+
+    @PutMapping("/{id}")
+    public ProductoResponse actualizar(@PathVariable Long id, @Valid @RequestBody ActualizarProductoRequest request) {
+        return productoService.actualizar(id, request);
     }
 }

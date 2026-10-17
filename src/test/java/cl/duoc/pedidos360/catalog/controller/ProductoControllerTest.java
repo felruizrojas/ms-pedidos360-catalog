@@ -3,6 +3,7 @@ package cl.duoc.pedidos360.catalog.controller;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -85,5 +86,50 @@ class ProductoControllerTest {
                         .content("{\"nombre\":\"\",\"precio\":-1,\"stock\":-2}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detalles").exists());
+    }
+
+    @Test
+    void actualizarPrecioYStockDevuelve200() throws Exception {
+        String creado = mockMvc.perform(post(URL).with(conScope()).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"nombre\":\"Monitor\",\"descripcion\":\"LED\",\"precio\":100000,\"stock\":3}"))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+        String id = creado.replaceAll(".*\"id\":(\\d+).*", "$1");
+
+        mockMvc.perform(put(URL + "/" + id).with(conScope()).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"precio\":89990,\"stock\":10}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nombre").value("Monitor"))
+                .andExpect(jsonPath("$.descripcion").value("LED"))
+                .andExpect(jsonPath("$.precio").value(89990))
+                .andExpect(jsonPath("$.stock").value(10));
+
+        mockMvc.perform(get(URL + "/" + id).with(conScope()))
+                .andExpect(jsonPath("$.precio").value(89990))
+                .andExpect(jsonPath("$.stock").value(10));
+    }
+
+    @Test
+    void actualizarInexistenteDevuelve404() throws Exception {
+        mockMvc.perform(put(URL + "/99999").with(conScope()).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"precio\":100,\"stock\":1}"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.mensaje").exists());
+    }
+
+    @Test
+    void actualizarInvalidoDevuelve400ConDetalles() throws Exception {
+        mockMvc.perform(put(URL + "/1").with(conScope()).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"precio\":0,\"stock\":-1}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detalles.precio").exists())
+                .andExpect(jsonPath("$.detalles.stock").exists());
+    }
+
+    @Test
+    void actualizarSinTokenDevuelve401() throws Exception {
+        mockMvc.perform(put(URL + "/1").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"precio\":100,\"stock\":1}"))
+                .andExpect(status().isUnauthorized());
     }
 }

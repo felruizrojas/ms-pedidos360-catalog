@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import cl.duoc.pedidos360.catalog.dto.ActualizarProductoRequest;
 import cl.duoc.pedidos360.catalog.dto.ProductoMapper;
 import cl.duoc.pedidos360.catalog.dto.ProductoRequest;
 import cl.duoc.pedidos360.catalog.dto.ProductoResponse;
@@ -51,5 +52,13 @@ public class ProductoService {
             // y solo uno pudo insertar gracias al constraint unique de la tabla.
             throw new ProductoDuplicadoException(nombre);
         }
+    }
+
+    public ProductoResponse actualizar(Long id, ActualizarProductoRequest request) {
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new ProductoNotFoundException(id));
+        producto.setPrecio(request.getPrecio());
+        producto.setStock(request.getStock());
+        return ProductoMapper.toResponse(productoRepository.save(producto));
     }
 }
