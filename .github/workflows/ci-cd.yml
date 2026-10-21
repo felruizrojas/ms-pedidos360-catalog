@@ -1,6 +1,7 @@
 name: CI/CD catalog
 
-# push a main: tests -> imagen en GHCR -> despliegue en la EC2 (si la variable EC2_HOST existe)
+# push a main: tests -> imagen en GHCR -> despliegue en la EC2 apps (si la variable EC2_HOST existe).
+# EC2_HOST es la misma EIP de apps en los repos catalog, orders y notify (output AppsPublicIp).
 on:
   push:
     branches: [main]
