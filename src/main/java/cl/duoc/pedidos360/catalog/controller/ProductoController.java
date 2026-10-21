@@ -3,6 +3,7 @@ package cl.duoc.pedidos360.catalog.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cl.duoc.pedidos360.catalog.dto.ActualizarProductoRequest;
 import cl.duoc.pedidos360.catalog.dto.ProductoRequest;
 import cl.duoc.pedidos360.catalog.dto.ProductoResponse;
+import cl.duoc.pedidos360.catalog.dto.StockRequest;
 import cl.duoc.pedidos360.catalog.service.ProductoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +47,26 @@ public class ProductoController {
     @PutMapping("/{id}")
     public ProductoResponse actualizar(@PathVariable Long id, @Valid @RequestBody ActualizarProductoRequest request) {
         return productoService.actualizar(id, request);
+    }
+
+    /** Borrado lógico: deja de listarse y de poder pedirse, pero la fila se conserva. */
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminar(@PathVariable Long id) {
+        productoService.eliminar(id);
+    }
+
+    /** Usado por ms-pedidos360-orders al aceptar un pedido. 409 si algún ítem no alcanza (sin cambios parciales). */
+    @PostMapping("/stock/decrease")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void descontarStock(@Valid @RequestBody StockRequest request) {
+        productoService.descontarStock(request);
+    }
+
+    /** Usado por ms-pedidos360-orders al cancelar un pedido que ya había descontado stock. */
+    @PostMapping("/stock/increase")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void reponerStock(@Valid @RequestBody StockRequest request) {
+        productoService.reponerStock(request);
     }
 }

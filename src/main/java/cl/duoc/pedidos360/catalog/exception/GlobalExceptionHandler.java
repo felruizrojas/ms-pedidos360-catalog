@@ -52,8 +52,36 @@ public class GlobalExceptionHandler {
         // 400 (no 409) y con "detalles.nombre" a propósito: es el mismo shape que ya usa
         // handleValidation, así el formulario del front marca el campo con un solo camino de código.
         Map<String, Object> body = ErrorBody.of(HttpStatus.BAD_REQUEST, "Error de validación");
-        body.put("detalles", Map.of("nombre", "Ya existe un producto con este nombre en el catálogo."));
+        String mensaje = ex.isEliminado()
+                ? "Existe un producto eliminado con este nombre."
+                : "Ya existe un producto con este nombre en el catálogo.";
+        body.put("detalles", Map.of("nombre", mensaje));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    @ExceptionHandler(StockInsuficienteException.class)
+    public ResponseEntity<Map<String, Object>> handleStockInsuficiente(StockInsuficienteException ex) {
+        // detalles estructurado: ms-pedidos360-orders lo reenvía tal cual al front en su propio 409.
+        Map<String, Object> detalles = new LinkedHashMap<>();
+        detalles.put("productoId", ex.getProductoId());
+        detalles.put("solicitado", ex.getSolicitado());
+        detalles.put("disponible", ex.getDisponible());
+
+        Map<String, Object> body = ErrorBody.of(HttpStatus.CONFLICT, ex.getMessage());
+        body.put("detalles", detalles);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
+    @ExceptionHandler(ProductoNoDisponibleException.class)
+    public ResponseEntity<Map<String, Object>> handleNoDisponible(ProductoNoDisponibleException ex) {
+        // detalles como Map: ms-pedidos360-orders solo reenvía "detalles" cuando es un objeto.
+        Map<String, Object> detalles = new LinkedHashMap<>();
+        detalles.put("productoId", ex.getProductoId());
+        detalles.put("motivo", ex.getMessage());
+
+        Map<String, Object> body = ErrorBody.of(HttpStatus.CONFLICT, ex.getMessage());
+        body.put("detalles", detalles);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 
     @ExceptionHandler(Exception.class)

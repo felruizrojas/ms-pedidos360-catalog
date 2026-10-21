@@ -1,6 +1,7 @@
 package cl.duoc.pedidos360.catalog.model;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,4 +37,12 @@ public class Producto {
 
     @Column(nullable = false)
     private Integer stock;
+
+    // Borrado lógico: los pedidos ya creados guardan productoId y nombre, así que la fila se conserva.
+    // columnDefinition con default para que ddl-auto=update pueda agregar la columna a una tabla con filas.
+    @Builder.Default
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean eliminado = false;
+
+    private Instant eliminadoEn;
 }
