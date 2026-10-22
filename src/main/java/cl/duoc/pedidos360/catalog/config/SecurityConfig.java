@@ -54,6 +54,11 @@ public class SecurityConfig {
                             "/actuator/health"
                     ).permitAll();
                     if (enforceRoles) {
+                        // Ver los eliminados es parte de administrar el catálogo (para poder restaurarlos).
+                        auth.requestMatchers(HttpMethod.GET, "/api/catalog/products/eliminados").access(
+                                AuthorizationManagers.allOf(
+                                        AuthorityAuthorizationManager.hasAuthority(SCOPE),
+                                        AuthorityAuthorizationManager.hasAnyAuthority("ROLE_Admin", "ROLE_Operador")));
                         for (HttpMethod method : List.of(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE)) {
                             auth.requestMatchers(method, "/api/catalog/**").access(
                                     AuthorizationManagers.allOf(

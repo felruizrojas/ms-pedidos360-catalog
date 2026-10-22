@@ -33,6 +33,12 @@ public class ProductoController {
         return productoService.listarTodos();
     }
 
+    /** Productos eliminados (borrado lógico). Con ENFORCE_ROLES=true, solo Admin/Operador. */
+    @GetMapping("/eliminados")
+    public List<ProductoResponse> listarEliminados() {
+        return productoService.listarEliminados();
+    }
+
     @GetMapping("/{id}")
     public ProductoResponse buscarPorId(@PathVariable Long id) {
         return productoService.buscarPorId(id);
@@ -54,6 +60,12 @@ public class ProductoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void eliminar(@PathVariable Long id) {
         productoService.eliminar(id);
+    }
+
+    /** Deshace el borrado lógico: vuelve a listarse y a poder pedirse. */
+    @PutMapping("/{id}/restaurar")
+    public ProductoResponse restaurar(@PathVariable Long id) {
+        return productoService.restaurar(id);
     }
 
     /** Usado por ms-pedidos360-orders al aceptar un pedido. 409 si algún ítem no alcanza (sin cambios parciales). */

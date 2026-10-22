@@ -21,6 +21,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
     // Filtro explícito (sin @SQLRestriction): la reposición de stock sí debe ver los eliminados.
     List<Producto> findAllByEliminadoFalse();
 
+    List<Producto> findAllByEliminadoTrue();
+
     Optional<Producto> findByIdAndEliminadoFalse(Long id);
 
     /**

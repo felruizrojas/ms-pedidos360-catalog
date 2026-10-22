@@ -23,6 +23,8 @@ Solo lo consume el BFF, que le reenvía el JWT del usuario; este servicio **vuel
 | POST | `/api/catalog/products` | scope (+ rol Admin/Operador si `ENFORCE_ROLES=true`) |
 | PUT | `/api/catalog/products/{id}` | scope (+ rol Admin/Operador si `ENFORCE_ROLES=true`) |
 | DELETE | `/api/catalog/products/{id}` | scope (+ rol Admin/Operador si `ENFORCE_ROLES=true`) · borrado lógico, **204** sin cuerpo |
+| GET | `/api/catalog/products/eliminados` | scope (+ rol Admin/Operador si `ENFORCE_ROLES=true`) · productos con borrado lógico |
+| PUT | `/api/catalog/products/{id}/restaurar` | scope (+ rol Admin/Operador si `ENFORCE_ROLES=true`) · deshace el borrado lógico, **200** con el producto (idempotente; 404 si no existe) |
 | POST | `/api/catalog/products/stock/decrease` | scope (+ rol Admin/Operador si `ENFORCE_ROLES=true`) · lo usa orders al **aceptar** un pedido |
 | POST | `/api/catalog/products/stock/increase` | scope (+ rol Admin/Operador si `ENFORCE_ROLES=true`) · lo usa orders al **cancelar** un pedido aceptado |
 | GET | `/actuator/health`, `/swagger-ui.html`, `/v3/api-docs` | público |

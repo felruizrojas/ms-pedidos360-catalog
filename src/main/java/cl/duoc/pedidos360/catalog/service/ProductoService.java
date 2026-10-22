@@ -35,6 +35,13 @@ public class ProductoService {
                 .toList();
     }
 
+    /** Eliminados (borrado lógico), para que Admin/Operador puedan deshacer la eliminación. */
+    public List<ProductoResponse> listarEliminados() {
+        return productoRepository.findAllByEliminadoTrue().stream()
+                .map(ProductoMapper::toResponse)
+                .toList();
+    }
+
     public ProductoResponse buscarPorId(Long id) {
         return ProductoMapper.toResponse(buscarVigente(id));
     }
@@ -74,6 +81,19 @@ public class ProductoService {
         producto.setEliminado(true);
         producto.setEliminadoEn(Instant.now());
         productoRepository.save(producto);
+    }
+
+    /** Deshace el borrado lógico. Idempotente: si ya estaba vigente lo devuelve igual. 404 si no existe. */
+    @Transactional
+    public ProductoResponse restaurar(Long id) {
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new ProductoNotFoundException(id));
+        if (producto.isEliminado()) {
+            producto.setEliminado(false);
+            producto.setEliminadoEn(null);
+            producto = productoRepository.save(producto);
+        }
+        return ProductoMapper.toResponse(producto);
     }
 
     /**

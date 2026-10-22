@@ -147,6 +147,43 @@ class ProductoEliminacionTest {
     }
 
     @Test
+    void eliminadoApareceEnEliminadosYRestaurarloLoDevuelveAlCatalogo() throws Exception {
+        String id = crear("Restaurar Uno", 4);
+        eliminar(id);
+
+        mockMvc.perform(get(URL + "/eliminados").with(conScope()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[*].nombre", hasItem("Restaurar Uno")));
+
+        mockMvc.perform(put(URL + "/" + id + "/restaurar").with(conScope()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nombre").value("Restaurar Uno"))
+                .andExpect(jsonPath("$.stock").value(4));
+
+        mockMvc.perform(get(URL + "/" + id).with(conScope())).andExpect(status().isOk());
+        mockMvc.perform(get(URL).with(conScope()))
+                .andExpect(jsonPath("$[*].nombre", hasItem("Restaurar Uno")));
+        mockMvc.perform(get(URL + "/eliminados").with(conScope()))
+                .andExpect(jsonPath("$[*].nombre", not(hasItem("Restaurar Uno"))));
+        assertThat(productoRepository.findById(Long.valueOf(id)).orElseThrow().getEliminadoEn()).isNull();
+    }
+
+    @Test
+    void restaurarUnVigenteEsIdempotente() throws Exception {
+        String id = crear("Restaurar Dos", 1);
+
+        mockMvc.perform(put(URL + "/" + id + "/restaurar").with(conScope()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nombre").value("Restaurar Dos"));
+    }
+
+    @Test
+    void restaurarInexistenteDevuelve404() throws Exception {
+        mockMvc.perform(put(URL + "/99999/restaurar").with(conScope()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void sinTokenDevuelve401() throws Exception {
         mockMvc.perform(delete(URL + "/1"))
                 .andExpect(status().isUnauthorized());

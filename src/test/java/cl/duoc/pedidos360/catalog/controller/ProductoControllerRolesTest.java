@@ -2,6 +2,7 @@ package cl.duoc.pedidos360.catalog.controller;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,6 +77,30 @@ class ProductoControllerRolesTest {
                                 new SimpleGrantedAuthority("ROLE_Operador")))
                         .contentType(MediaType.APPLICATION_JSON).content(ACTUALIZACION))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void eliminadosConRolClienteDevuelve403() throws Exception {
+        mockMvc.perform(get(URL + "/eliminados")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_access_as_user"),
+                                new SimpleGrantedAuthority("ROLE_Cliente"))))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void eliminadosConRolOperadorDevuelve200() throws Exception {
+        mockMvc.perform(get(URL + "/eliminados")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_access_as_user"),
+                                new SimpleGrantedAuthority("ROLE_Operador"))))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void restaurarConRolClienteDevuelve403() throws Exception {
+        mockMvc.perform(put(URL + "/1/restaurar")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_access_as_user"),
+                                new SimpleGrantedAuthority("ROLE_Cliente"))))
+                .andExpect(status().isForbidden());
     }
 
     private static final String STOCK = "{\"items\":[{\"productoId\":99999,\"cantidad\":1}]}";
