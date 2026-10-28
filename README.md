@@ -133,3 +133,5 @@ curl -i -X POST $BASE/api/catalog/products/stock/increase \
 curl -i -X DELETE -H "Authorization: Bearer $TOKEN" $BASE/api/catalog/products/4  # 204 (repetirlo → 404)
 curl -i -H "Authorization: Bearer $TOKEN" $BASE/api/catalog/products/4            # 404
 ```
+
+#evaluacion 2
