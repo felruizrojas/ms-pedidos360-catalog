@@ -35,7 +35,7 @@ public class ProductoService {
                 .toList();
     }
 
-    /** Eliminados (borrado lógico), para que Admin/Operador puedan deshacer la eliminación. */
+    /** Eliminados (borrado lógico), para que Admin pueda deshacer la eliminación. */
     public List<ProductoResponse> listarEliminados() {
         return productoRepository.findAllByEliminadoTrue().stream()
                 .map(ProductoMapper::toResponse)

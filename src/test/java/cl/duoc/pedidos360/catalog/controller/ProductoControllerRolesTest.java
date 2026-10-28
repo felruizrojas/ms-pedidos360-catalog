@@ -70,13 +70,31 @@ class ProductoControllerRolesTest {
     }
 
     @Test
-    void putConRolOperadorPasaLaSeguridad() throws Exception {
+    void putConRolAdminPasaLaSeguridad() throws Exception {
         // 404 (no 403): la seguridad lo dejó pasar y el controller respondió que el id no existe.
         mockMvc.perform(put(URL + "/99999")
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_access_as_user"),
-                                new SimpleGrantedAuthority("ROLE_Operador")))
+                                new SimpleGrantedAuthority("ROLE_Admin")))
                         .contentType(MediaType.APPLICATION_JSON).content(ACTUALIZACION))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void putConRolOperadorDevuelve403() throws Exception {
+        mockMvc.perform(put(URL + "/1")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_access_as_user"),
+                                new SimpleGrantedAuthority("ROLE_Operador")))
+                        .contentType(MediaType.APPLICATION_JSON).content(ACTUALIZACION))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void postConRolOperadorDevuelve403() throws Exception {
+        mockMvc.perform(post(URL)
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_access_as_user"),
+                                new SimpleGrantedAuthority("ROLE_Operador")))
+                        .contentType(MediaType.APPLICATION_JSON).content(VALIDO))
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -88,11 +106,19 @@ class ProductoControllerRolesTest {
     }
 
     @Test
-    void eliminadosConRolOperadorDevuelve200() throws Exception {
+    void eliminadosConRolAdminDevuelve200() throws Exception {
+        mockMvc.perform(get(URL + "/eliminados")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_access_as_user"),
+                                new SimpleGrantedAuthority("ROLE_Admin"))))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void eliminadosConRolOperadorDevuelve403() throws Exception {
         mockMvc.perform(get(URL + "/eliminados")
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_access_as_user"),
                                 new SimpleGrantedAuthority("ROLE_Operador"))))
-                .andExpect(status().isOk());
+                .andExpect(status().isForbidden());
     }
 
     @Test
@@ -134,12 +160,22 @@ class ProductoControllerRolesTest {
     }
 
     @Test
-    void stockIncreaseConRolAdminPasaLaSeguridad() throws Exception {
+    void stockIncreaseConRolOperadorPasaLaSeguridad() throws Exception {
         mockMvc.perform(post(URL + "/stock/increase")
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_access_as_user"),
+                                new SimpleGrantedAuthority("ROLE_Operador")))
+                        .contentType(MediaType.APPLICATION_JSON).content(STOCK))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void stockDecreaseConRolAdminDevuelve403() throws Exception {
+        // El stock solo se mueve al aceptar/cancelar pedidos (Operador vía orders), no desde el dashboard.
+        mockMvc.perform(post(URL + "/stock/decrease")
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_access_as_user"),
                                 new SimpleGrantedAuthority("ROLE_Admin")))
                         .contentType(MediaType.APPLICATION_JSON).content(STOCK))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isForbidden());
     }
 
     private String crearComoAdmin(String nombre) throws Exception {
@@ -177,11 +213,11 @@ class ProductoControllerRolesTest {
     }
 
     @Test
-    void deleteConRolOperadorDevuelve204() throws Exception {
+    void deleteConRolOperadorDevuelve403() throws Exception {
         String id = crearComoAdmin("Roles Borrar Operador");
         mockMvc.perform(delete(URL + "/" + id)
                         .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_access_as_user"),
                                 new SimpleGrantedAuthority("ROLE_Operador"))))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isForbidden());
     }
 }

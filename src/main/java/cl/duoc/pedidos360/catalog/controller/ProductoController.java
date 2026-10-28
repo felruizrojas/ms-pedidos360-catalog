@@ -33,7 +33,7 @@ public class ProductoController {
         return productoService.listarTodos();
     }
 
-    /** Productos eliminados (borrado lógico). Con ENFORCE_ROLES=true, solo Admin/Operador. */
+    /** Productos eliminados (borrado lógico). Con ENFORCE_ROLES=true, solo Admin. */
     @GetMapping("/eliminados")
     public List<ProductoResponse> listarEliminados() {
         return productoService.listarEliminados();

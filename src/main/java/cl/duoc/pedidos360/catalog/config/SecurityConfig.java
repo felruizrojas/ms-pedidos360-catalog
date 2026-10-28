@@ -54,16 +54,22 @@ public class SecurityConfig {
                             "/actuator/health"
                     ).permitAll();
                     if (enforceRoles) {
-                        // Ver los eliminados es parte de administrar el catálogo (para poder restaurarlos).
+                        // El stock lo mueve orders al aceptar (descuenta) o cancelar (repone) un pedido,
+                        // reenviando el token del Operador que hizo la transición.
+                        auth.requestMatchers(HttpMethod.POST, "/api/catalog/products/stock/**").access(
+                                AuthorizationManagers.allOf(
+                                        AuthorityAuthorizationManager.hasAuthority(SCOPE),
+                                        AuthorityAuthorizationManager.hasAuthority("ROLE_Operador")));
+                        // Administrar el catálogo (escribir y ver los eliminados para restaurarlos) es solo de Admin.
                         auth.requestMatchers(HttpMethod.GET, "/api/catalog/products/eliminados").access(
                                 AuthorizationManagers.allOf(
                                         AuthorityAuthorizationManager.hasAuthority(SCOPE),
-                                        AuthorityAuthorizationManager.hasAnyAuthority("ROLE_Admin", "ROLE_Operador")));
+                                        AuthorityAuthorizationManager.hasAuthority("ROLE_Admin")));
                         for (HttpMethod method : List.of(HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE)) {
                             auth.requestMatchers(method, "/api/catalog/**").access(
                                     AuthorizationManagers.allOf(
                                             AuthorityAuthorizationManager.hasAuthority(SCOPE),
-                                            AuthorityAuthorizationManager.hasAnyAuthority("ROLE_Admin", "ROLE_Operador")));
+                                            AuthorityAuthorizationManager.hasAuthority("ROLE_Admin")));
                         }
                     }
                     auth.requestMatchers("/api/catalog/**").hasAuthority(SCOPE)
