@@ -13,3 +13,9 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:?falta DB_PASSWORD en .env}
       ENFORCE_ROLES: ${ENFORCE_ROLES:-false}
     mem_limit: 768m
+    # Rotación de logs: un error en bucle no puede llenar el disco de la EC2 (máx. 3 archivos de 10 MB).
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
